@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://gmfh54op0xbl"]
+[gd_scene load_steps=2 format=3 uid="uid://gmfh54op0xbl"]
+
+[ext_resource type="Script" uid="uid://bb7ntjuxfc58t" path="res://sample_script.gd" id="1_uledb"]
 
 [node name="Sample" type="Node3D"]
+script = ExtResource("1_uledb")
