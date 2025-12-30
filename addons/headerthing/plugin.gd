@@ -1,8 +1,15 @@
+# ***
+# author: 
+# brief:
+# date:
+# ***
+
+# ***
 @tool
 extends EditorPlugin
 
 var file : FileAccess
-var header_source : String
+var header_source : PackedStringArray
 var script_editor: ScriptEditor
 var source_code : String
 
@@ -23,7 +30,8 @@ func _enter_tree() -> void:
 	# TODO: error checking
 	# this will not be a todo soon
 	file = FileAccess.open("res://addons/headerthing/header_source.txt", FileAccess.READ)
-	header_source = file.get_as_text()
+	
+	header_source = file.get_as_text().split("\n")
 	script_editor = EditorInterface.get_script_editor()	
 	
 	if (script_editor == null): 
@@ -38,9 +46,6 @@ func _enter_tree() -> void:
 	pass
 
 
-# TODO: every time the script has changed,
-# check in the first line of the function the string "#-"
-# if it is there, insert header into the source code
 func _process(delta: float) -> void:
 	var script := get_editor_interface().get_script_editor().get_current_script() 
 
@@ -49,11 +54,11 @@ func _process(delta: float) -> void:
 		if script && script.has_source_code():
 			# print(script.source_code.get_slice("\n", 0))
 			
-			# TODO: replace "# *" with the first line of the source
+			# TODO: replace "# *" with the first line of the source, up to two chars
 			# thats what we call data driven development !!
 			if (script.source_code.get_slice("\n", 0) == "# *"):
 				var new_code = script.source_code.split("\n")
-				# new_code = _insert_header(new_code)
+				new_code = _insert_header(new_code)
 				new_code = "\n".join(new_code)
 				script.source_code = new_code
 				
@@ -78,6 +83,9 @@ func _check_script(script: Script) -> void:
 
 
 func _insert_header(code: PackedStringArray) -> PackedStringArray:
-	# code[0]
+	code[0] = header_source[0]
+	for line in header_source.size():
+		code.insert(line, header_source[line])
+		pass
 	
 	return code
